@@ -15,10 +15,8 @@ public class AppUserController {
 
     public AppUserController(AppUserService service) {
         this.service = service;
-    }
-
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    }    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<AppUser> getAllUsers() {
         return service.findAll();
     }

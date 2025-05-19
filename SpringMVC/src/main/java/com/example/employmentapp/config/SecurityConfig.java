@@ -48,12 +48,11 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/v3/api-docs/**"),
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html")
-                ).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/users/**", "POST")).hasRole("ADMIN")
+                ).permitAll()                .requestMatchers(new AntPathRequestMatcher("/api/users/**", "POST")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/**", "PUT")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/**", "DELETE")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/me")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/api/users/**")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/api/users/**", "GET")).hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults())
