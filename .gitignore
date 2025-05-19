@@ -1,0 +1,36 @@
+# Root .gitignore
+.vscode/
+**/node_modules/
+**/target/
+**/dist/
+**/.env
+
+# React specific
+ReactJS/.pnp
+ReactJS/.pnp.js
+ReactJS/coverage
+ReactJS/build
+ReactJS/.DS_Store
+ReactJS/.env.local
+ReactJS/.env.development.local
+ReactJS/.env.test.local
+ReactJS/.env.production.local
+ReactJS/npm-debug.log*
+ReactJS/yarn-debug.log*
+ReactJS/yarn-error.log*
+
+# Spring Boot specific
+SpringMVC/HELP.md
+SpringMVC/.apt_generated
+SpringMVC/.classpath
+SpringMVC/.factorypath
+SpringMVC/.project
+SpringMVC/.settings
+SpringMVC/.springBeans
+SpringMVC/.sts4-cache
+SpringMVC/.idea
+SpringMVC/*.iws
+SpringMVC/*.iml
+SpringMVC/*.ipr
+SpringMVC/nbproject/
+SpringMVC/build/
