@@ -1,4 +1,4 @@
-# User Management Spring Boot App
+# User Management FullStack App
 
 A full-stack application for managing users with Spring Boot backend and React frontend, featuring MySQL database integration and role-based authentication.
 
