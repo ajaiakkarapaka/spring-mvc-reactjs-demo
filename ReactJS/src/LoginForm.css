@@ -1,0 +1,94 @@
+.login-container {
+  background: linear-gradient(135deg, #6B8DD6 0%, #8E37D7 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 2rem;
+}
+
+.app-logo {
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 15px !important;
+  padding: clamp(20px, 5vw, 40px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  width: min(90%, 400px) !important;
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+.login-title {
+  color: #2c3e50;
+  margin-bottom: 30px !important;
+  font-weight: 600 !important;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-input {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.login-input .MuiOutlinedInput-root {
+  border-radius: 10px;
+}
+
+.login-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #8E37D7;
+}
+
+.login-button {
+  margin-top: 20px !important;
+  padding: 12px !important;
+  border-radius: 10px !important;
+  text-transform: none !important;
+  font-size: 16px !important;
+  background: linear-gradient(45deg, #6B8DD6 30%, #8E37D7 90%) !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 20px rgba(142, 55, 215, 0.4) !important;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(142, 55, 215, 0.5) !important;
+}
+
+.error-message {
+  color: #e74c3c !important;
+  text-align: center;
+  margin-top: 10px !important;
+  font-size: 0.875rem !important;
+  padding: 8px 12px !important;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 8px;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.version-text {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+}

@@ -1,48 +1,73 @@
 import React, { useState } from 'react';
 import { Button, TextField, Box, Typography, Paper } from '@mui/material';
+import Logo from './Logo';
+import './LoginForm.css';
 
 export default function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
       setError('Username and password required');
       return;
     }
     setError('');
-    onLogin(username, password);
+    try {
+      await onLogin(username, password);
+    } catch (err) {
+      setError(err.message || 'Username and password do not match');
+    }
   };
-
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Paper elevation={3} sx={{ p: 4, minWidth: 320 }}>
-        <Typography variant="h5" mb={2}>Login</Typography>
-        <form onSubmit={handleSubmit}>
+    <Box className="login-container">
+      <Logo />
+      <Paper className="login-card" elevation={3}>
+        <Typography className="login-title" variant="h4">
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit} className="login-form">
           <TextField
+            className="login-input"
             label="Username"
             value={username}
             onChange={e => setUsername(e.target.value)}
             fullWidth
-            margin="normal"
+            variant="outlined"
             autoFocus
+            InputProps={{
+              style: { fontSize: '16px' }
+            }}
+            InputLabelProps={{
+              style: { fontSize: '16px' }
+            }}
           />
           <TextField
+            className="login-input"
             label="Password"
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             fullWidth
-            margin="normal"
+            variant="outlined"
+            InputProps={{
+              style: { fontSize: '16px' }
+            }}
+            InputLabelProps={{
+              style: { fontSize: '16px' }
+            }}
           />
-          {error && <Typography color="error" variant="body2">{error}</Typography>}
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-            Login
+          {error && <Typography className="error-message">{error}</Typography>}
+          <Button className="login-button" type="submit" variant="contained" fullWidth>
+            Sign In
           </Button>
         </form>
       </Paper>
+      <Typography className="version-text" variant="caption">
+        v1.0.0
+      </Typography>
     </Box>
   );
 }

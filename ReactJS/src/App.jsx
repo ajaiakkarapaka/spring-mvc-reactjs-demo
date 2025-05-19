@@ -40,12 +40,7 @@ export default function App() {
     setLoading(true);
     setError('');
     try {
-      // First try to get current user info
-      console.log('Fetching current user info...');
       const currentUser = await fetchCurrentUser(authHeader);
-      console.log('Current user:', currentUser);
-      
-      // Set auth state if successful
       setAuth(authHeader);
       setUsername(currentUser.username);
       setRole(currentUser.role);
@@ -60,13 +55,11 @@ export default function App() {
         setUsers([currentUser]); // Show only the current user
       }
     } catch (e) {
-      console.error('Login error:', e);
-      setError('Login failed: ' + (e.message || 'Unknown error'));
-      // Reset state on error
       setAuth(null);
       setUsername('');
       setRole(null);
       setUsers([]);
+      throw new Error('Username and password do not match');
     }
     setLoading(false);
   };

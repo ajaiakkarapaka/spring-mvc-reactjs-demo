@@ -11,8 +11,12 @@ export async function fetchUsers(auth) {
       'Content-Type': 'application/json'
     },
     mode: 'cors'
-  });
-  if (!res.ok) throw new Error('Failed to fetch users');
+  });  if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('Username and password do not match');
+    }
+    throw new Error('Failed to fetch users');
+  }
   return res.json();
 }
 

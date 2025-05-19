@@ -1,0 +1,103 @@
+.user-list-container {
+  background: linear-gradient(135deg, #6B8DD6 0%, #8E37D7 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.user-list-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border-radius: clamp(10px, 2vw, 15px) !important;
+  width: min(95%, 1200px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  overflow-x: auto !important;
+}
+
+.user-list-header {
+  color: #2c3e50;
+  padding: 1.5rem !important;
+  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+  background-color: #f8f9fa !important;
+}
+
+.table-header th {
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+  font-size: clamp(0.8rem, 2vw, 0.95rem) !important;
+  padding: clamp(8px, 2vw, 16px) !important;
+  white-space: nowrap;
+}
+
+.table-row {
+  transition: background-color 0.2s ease;
+}
+
+.table-row:hover {
+  background-color: rgba(107, 141, 214, 0.05) !important;
+}
+
+.table-row td {
+  padding: clamp(8px, 2vw, 16px) !important;
+  font-size: clamp(0.8rem, 2vw, 0.95rem) !important;
+}
+
+@media (max-width: 600px) {
+  .table-row td {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.edit-button {
+  background: linear-gradient(45deg, #6B8DD6 30%, #8E37D7 90%) !important;
+  color: white !important;
+  padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 16px) !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-size: clamp(0.75rem, 2vw, 0.875rem) !important;
+  box-shadow: 0 2px 8px rgba(107, 141, 214, 0.3) !important;
+  transition: all 0.3s ease !important;
+  min-width: 60px;
+}
+
+.edit-button:hover {
+  box-shadow: 0 4px 12px rgba(107, 141, 214, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.delete-button {
+  background-color: #fff !important;
+  color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+  padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 16px) !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-size: clamp(0.75rem, 2vw, 0.875rem) !important;
+  transition: all 0.3s ease !important;
+  min-width: 60px;
+}
+
+@media (max-width: 480px) {
+  .edit-button, .delete-button {
+    padding: 8px !important;
+    min-width: 40px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+.delete-button:hover {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
+}
