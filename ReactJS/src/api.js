@@ -41,8 +41,10 @@ export async function updateUser(id, formData, auth) {
       'Authorization': auth
     },
     body: formData
-  });
-  if (!res.ok) throw new Error('Failed to update user');
+  });  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText);
+  }
   return res.json();
 }
 

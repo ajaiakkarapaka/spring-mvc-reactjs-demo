@@ -252,9 +252,9 @@ export default function UserForm({ open, onClose, onSave, user }) {
           padding: 3,
           background: 'rgba(0, 0, 0, 0.02)',
           borderTop: '1px solid rgba(0, 0, 0, 0.05)'
-        }}>
-          <Button 
+        }}>          <Button 
             onClick={onClose}
+            disabled={loading}
             sx={{
               borderRadius: 2,
               textTransform: 'none',
@@ -266,6 +266,7 @@ export default function UserForm({ open, onClose, onSave, user }) {
           <Button 
             type="submit" 
             variant="contained"
+            disabled={loading}
             sx={{
               borderRadius: 2,
               textTransform: 'none',
@@ -278,7 +279,7 @@ export default function UserForm({ open, onClose, onSave, user }) {
               transition: 'all 0.2s ease',
             }}
           >
-            Save
+            {loading ? 'Saving...' : 'Save'}
           </Button>
         </DialogActions>
       </form>
