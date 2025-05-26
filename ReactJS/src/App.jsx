@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, AppBar, Toolbar, Typography, Button, Container, Box, Snackbar, Alert } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, AppBar, Toolbar, Typography, Button, Container, Box, Snackbar, Alert, Fade } from '@mui/material';
+import { theme } from './theme';
 import LoginForm from './LoginForm';
 import UserList from './UserList';
 import UserForm from './UserForm';
 import { getAuthHeader, fetchUsers, createUser, updateUser, deleteUser, fetchCurrentUser } from './api';
+import './App.css';
 
 export default function App() {
   const [auth, setAuth] = useState(null);
   const [username, setUsername] = useState('');
-  const [role, setRole] = useState(null); // <-- add role state
+  const [role, setRole] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,7 +19,6 @@ export default function App() {
   const [editUser, setEditUser] = useState(null);
   const [success, setSuccess] = useState('');
 
-  // Fetch users after login
   useEffect(() => {
     if (auth) {
       loadUsers();
@@ -44,15 +46,12 @@ export default function App() {
       setAuth(authHeader);
       setUsername(currentUser.username);
       setRole(currentUser.role);
-      
-      // Try to fetch users list if admin
+
       if (currentUser.role === 'ADMIN') {
-        console.log('Admin user, fetching all users...');
         const data = await fetchUsers(authHeader);
         setUsers(data);
       } else {
-        console.log('Regular user, setting empty user list');
-        setUsers([currentUser]); // Show only the current user
+        setUsers([currentUser]);
       }
     } catch (e) {
       setAuth(null);
@@ -94,53 +93,113 @@ export default function App() {
     setLoading(false);
   };
 
-  const handleSave = async (form) => {
+  const handleSave = async (formData) => {
     setLoading(true);
     setError('');
     try {
       if (editUser) {
-        // If password is blank, don't send it
-        const userToUpdate = { ...editUser, ...form };
-        if (!form.password) delete userToUpdate.password;
-        await updateUser(editUser.id, userToUpdate, auth);
+        await updateUser(editUser.id, formData, auth);
         setSuccess('User updated');
+        setShowForm(false);
       } else {
-        await createUser(form, auth);
+        await createUser(formData, auth);
         setSuccess('User created');
+        setShowForm(false);
       }
-      setShowForm(false);
       await loadUsers();
-    } catch (e) {
-      setError(e.message);
+    } catch (err) {
+      // Let the UserForm handle the duplicate username error
+      if (err.message.includes('Username already exists')) {
+        throw err; // Pass the error to UserForm
+      } else {
+        setError(err.message);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const isAdmin = role === 'ADMIN';
 
   if (!auth) {
-    return <LoginForm onLogin={handleLogin} />;
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <LoginForm onLogin={handleLogin} />
+      </ThemeProvider>
+    );
   }
 
   return (
-    <Box>
-      <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>User Management</Typography>
-          <Typography variant="body1" sx={{ mr: 2 }}>{username} ({role})</Typography>
-          <Button color="inherit" onClick={handleLogout}>Logout</Button>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="md">
-        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-        {success && <Snackbar open autoHideDuration={3000} onClose={() => setSuccess('')}><Alert severity="success">{success}</Alert></Snackbar>}
-        <Box display="flex" justifyContent="flex-end" mt={4}>
-          {isAdmin && <Button variant="contained" color="primary" onClick={handleCreate}>Create User</Button>}
-        </Box>
-        <UserList users={users} isAdmin={isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
-        <UserForm open={showForm} onClose={() => setShowForm(false)} onSave={handleSave} user={editUser} />
-      </Container>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box className="app-container">
+        <CssBaseline />
+        <AppBar position="static" className="app-header">
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>User Management</Typography>
+            <Typography variant="body1" sx={{ mr: 2 }}>{username} ({role})</Typography>
+            <Button 
+              color="inherit" 
+              onClick={handleLogout}
+              sx={{ 
+                borderRadius: 2,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                }
+              }}
+            >
+              Logout
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Container className="content-container">
+          <Fade in={!!error}>
+            <Box sx={{ mb: 2 }}>
+              {error && <Alert severity="error" sx={{ borderRadius: 2 }}>{error}</Alert>}
+            </Box>
+          </Fade>
+          {success && (
+            <Snackbar 
+              open 
+              autoHideDuration={3000} 
+              onClose={() => setSuccess('')}
+              TransitionComponent={Fade}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              <Alert severity="success" sx={{ borderRadius: 2 }}>{success}</Alert>
+            </Snackbar>
+          )}
+          <Box 
+            display="flex" 
+            justifyContent="flex-end" 
+            mt={4} 
+            mb={2}
+          >
+            {isAdmin && (
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={handleCreate}
+                sx={{
+                  px: 4,
+                  py: 1,
+                  borderRadius: 2,
+                  boxShadow: 2,
+                  '&:hover': {
+                    boxShadow: 4,
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                Create User
+              </Button>
+            )}
+          </Box>
+          <UserList users={users} isAdmin={isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
+          <UserForm open={showForm} onClose={() => setShowForm(false)} onSave={handleSave} user={editUser} />
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }
