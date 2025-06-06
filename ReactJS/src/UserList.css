@@ -4,8 +4,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: 24px;
   gap: clamp(1rem, 3vw, 2rem);
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user-list-card {
@@ -17,6 +29,41 @@
   overflow-x: auto !important;
 }
 
+.user-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  margin-right: 16px;
+  transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 .user-list-header {
   color: #2c3e50;
   padding: 1.5rem !important;
@@ -26,13 +73,15 @@
 }
 
 .table-header {
-  background-color: #f8f9fa !important;
+  background-color: #f5f5f5;
+  font-weight: 600;
 }
 
 .table-header th {
-  font-weight: 600 !important;
-  color: #2c3e50 !important;
-  font-size: clamp(0.8rem, 2vw, 0.95rem) !important;
+  color: #3f51b5;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   padding: clamp(8px, 2vw, 16px) !important;
   white-space: nowrap;
 }
@@ -42,21 +91,12 @@
 }
 
 .table-row:hover {
-  background-color: rgba(107, 141, 214, 0.05) !important;
+  background-color: rgba(63, 81, 181, 0.05);
 }
 
-.table-row td {
-  padding: clamp(8px, 2vw, 16px) !important;
-  font-size: clamp(0.8rem, 2vw, 0.95rem) !important;
-}
-
-@media (max-width: 600px) {
-  .table-row td {
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.table-cell {
+  padding: 16px;
+  vertical-align: middle;
 }
 
 .edit-button {
@@ -88,6 +128,15 @@
   min-width: 60px;
 }
 
+@media (max-width: 600px) {
+  .table-row td {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 480px) {
   .edit-button, .delete-button {
     padding: 8px !important;
@@ -100,4 +149,16 @@
   background-color: #dc3545 !important;
   color: #fff !important;
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
+}
+
+.user-button {
+  text-transform: none !important;
+  min-width: 0 !important;
+  padding: 6px 12px !important;
+  border-radius: 20px !important;
+  transition: all 0.2s ease !important;
+}
+
+.user-button:hover {
+  background-color: rgba(63, 81, 181, 0.1) !important;
 }
