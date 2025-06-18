@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, AppBar, Toolbar, Typography, Button, Container, Box, Snackbar, Alert, Fade } from '@mui/material';
+import { 
+  CssBaseline, 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Button, 
+  Container, 
+  Box, 
+  Snackbar, 
+  Alert, 
+  Fade,
+  CircularProgress 
+} from '@mui/material';
 import { theme } from './theme';
 import LoginForm from './LoginForm';
 import UserList from './UserList';
 import UserForm from './UserForm';
+import ErrorBoundary from './ErrorBoundary';
 import { getAuthHeader, fetchUsers, createUser, updateUser, deleteUser, fetchCurrentUser } from './api';
 import './App.css';
 
@@ -19,48 +32,58 @@ export default function App() {
   const [editUser, setEditUser] = useState(null);
   const [success, setSuccess] = useState('');
 
+  const loadUsers = async (authHeader) => {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await fetchUsers(authHeader || auth);
+      console.log('Fetched users:', data); // Debug log
+      setUsers(data);
+    } catch (e) {
+      console.error('Error loading users:', e); // Debug log
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (auth) {
       loadUsers();
     }
   }, [auth]);
 
-  const loadUsers = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const data = await fetchUsers(auth);
-      setUsers(data);
-    } catch (e) {
-      setError(e.message);
-    }
-    setLoading(false);
-  };
-
   const handleLogin = async (user, pass) => {
     const authHeader = getAuthHeader(user, pass);
     setLoading(true);
     setError('');
+    
     try {
+      // First get the current user's info
       const currentUser = await fetchCurrentUser(authHeader);
+      
+      // Then update all the state atomically
       setAuth(authHeader);
       setUsername(currentUser.username);
       setRole(currentUser.role);
-
+      
+      // Load users based on role
       if (currentUser.role === 'ADMIN') {
-        const data = await fetchUsers(authHeader);
-        setUsers(data);
+        await loadUsers(authHeader);
       } else {
         setUsers([currentUser]);
       }
+      
+      setLoading(false);
     } catch (e) {
+      console.error('Login error:', e);
+      setLoading(false);
       setAuth(null);
       setUsername('');
       setRole(null);
       setUsers([]);
       throw new Error('Username and password do not match');
     }
-    setLoading(false);
   };
 
   const handleLogout = () => {
@@ -152,23 +175,27 @@ export default function App() {
             </Button>
           </Toolbar>
         </AppBar>
+        
         <Container className="content-container">
-          <Fade in={!!error}>
-            <Box sx={{ mb: 2 }}>
-              {error && <Alert severity="error" sx={{ borderRadius: 2 }}>{error}</Alert>}
-            </Box>
-          </Fade>
+          {error && (
+            <Fade in={!!error}>
+              <Box sx={{ mb: 2 }}>
+                <Alert severity="error" sx={{ borderRadius: 2 }}>{error}</Alert>
+              </Box>
+            </Fade>
+          )}
+          
           {success && (
             <Snackbar 
               open 
               autoHideDuration={3000} 
               onClose={() => setSuccess('')}
-              TransitionComponent={Fade}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
               <Alert severity="success" sx={{ borderRadius: 2 }}>{success}</Alert>
             </Snackbar>
           )}
+
           <Box 
             display="flex" 
             justifyContent="flex-end" 
@@ -180,6 +207,7 @@ export default function App() {
                 variant="contained" 
                 color="primary"
                 onClick={handleCreate}
+                disabled={loading}
                 sx={{
                   px: 4,
                   py: 1,
@@ -196,8 +224,28 @@ export default function App() {
               </Button>
             )}
           </Box>
-          <UserList users={users} isAdmin={isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
-          <UserForm open={showForm} onClose={() => setShowForm(false)} onSave={handleSave} user={editUser} />
+
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <UserList 
+              users={users} 
+              isAdmin={role === 'ADMIN'} 
+              onEdit={handleEdit} 
+              onDelete={handleDelete} 
+            />
+          )}
+
+          <ErrorBoundary>
+            <UserForm 
+              open={showForm} 
+              onClose={() => setShowForm(false)} 
+              onSave={handleSave} 
+              user={editUser} 
+            />
+          </ErrorBoundary>
         </Container>
       </Box>
     </ThemeProvider>
