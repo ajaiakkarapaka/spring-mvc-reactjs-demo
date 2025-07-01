@@ -20,29 +20,31 @@ export async function fetchUsers(auth) {
   return res.json();
 }
 
-export async function createUser(user, auth) {
-  const res = await fetch('http://localhost:8080/api/users', {
+export async function createUser(formData, auth) {  const res = await fetch('http://localhost:8080/api/users', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': auth
     },
-    body: JSON.stringify(user)
+    body: formData
   });
-  if (!res.ok) throw new Error('Failed to create user');
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText);
+  }
   return res.json();
 }
 
-export async function updateUser(id, user, auth) {
+export async function updateUser(id, formData, auth) {
   const res = await fetch(`http://localhost:8080/api/users/${id}`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': auth
     },
-    body: JSON.stringify(user)
-  });
-  if (!res.ok) throw new Error('Failed to update user');
+    body: formData
+  });  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText);
+  }
   return res.json();
 }
 

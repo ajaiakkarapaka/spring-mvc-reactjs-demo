@@ -18,7 +18,7 @@ export default function Logo() {
           fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
         }}
       >
-        USER MANAGEMENT
+        STUDENT MANAGEMENT
       </Typography>
     </Box>
   );
