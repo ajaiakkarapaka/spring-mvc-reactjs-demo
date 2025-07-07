@@ -1,7 +1,7 @@
 package com.example.employmentapp.controller;
 
-import com.example.employmentapp.model.AppUser;
-import com.example.employmentapp.service.AppUserService;
+import com.example.employmentapp.model.Users;
+import com.example.employmentapp.service.UsersService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,28 +14,28 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class AppUserController {
-    private final AppUserService service;
+public class UsersController {
+    private final UsersService service;
 
-    public AppUserController(AppUserService service) {
+    public UsersController(UsersService service) {
         this.service = service;
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public List<AppUser> getAllUsers() {
+    public List<Users> getAllUsers() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public AppUser getUserById(@PathVariable Long id) {
+    public Users getUserById(@PathVariable Long id) {
         return service.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public AppUser getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+    public Users getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) throw new RuntimeException("Not authenticated");
         return service.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -43,7 +43,7 @@ public class AppUserController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createUser(@RequestPart("user") AppUser user,
+    public ResponseEntity<?> createUser(@RequestPart("user") Users user,
                                      @RequestPart(value = "photo", required = false) MultipartFile photo) throws IOException {
         if (service.findByUsername(user.getUsername()).isPresent()) {
             System.out.println("Duplicate username detected: " + user.getUsername()); // Log duplicate username
@@ -56,12 +56,14 @@ public class AppUserController {
         }
 
         return ResponseEntity.ok(service.save(user));
-    }    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id,
-                                            @RequestPart("user") AppUser user,
+                                            @RequestPart("user") Users user,
                                             @RequestPart(value = "photo", required = false) MultipartFile photo) throws IOException {
-        AppUser existing = service.findById(id)
+        Users existing = service.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));        // Check if username is changed and new username already exists
         if (!existing.getUsername().equals(user.getUsername()) &&
             service.findByUsername(user.getUsername()).isPresent()) {
@@ -86,7 +88,7 @@ public class AppUserController {
 
     @GetMapping("/{id}/photo")
     public ResponseEntity<byte[]> getUserPhoto(@PathVariable Long id) {
-        AppUser user = service.findById(id)
+        Users user = service.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (user.getProfilePhoto() == null) {
