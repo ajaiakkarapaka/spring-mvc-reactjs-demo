@@ -26,7 +26,7 @@ import org.springframework.lang.NonNull;
 @EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,7 +48,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/v3/api-docs/**"),
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html")
-                ).permitAll()                .requestMatchers(new AntPathRequestMatcher("/api/users/**", "POST")).hasRole("ADMIN")
+                ).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/users/**", "POST")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/**", "PUT")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/**", "DELETE")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/api/users/me")).authenticated()

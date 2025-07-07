@@ -3,7 +3,7 @@ package com.example.employmentapp.model;
 import jakarta.persistence.*;
 
 @Entity
-public class AppUser {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

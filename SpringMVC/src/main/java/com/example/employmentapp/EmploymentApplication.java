@@ -4,12 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EmploymentAppApplication {
+public class EmploymentApplication {
 
 	public static void main(String[] args) {
 
 		//System.out.println(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("yourpassword"));
-		SpringApplication.run(EmploymentAppApplication.class, args);
+		SpringApplication.run(EmploymentApplication.class, args);
 	}
 
 }

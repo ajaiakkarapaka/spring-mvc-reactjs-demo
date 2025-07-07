@@ -1,7 +1,7 @@
 package com.example.employmentapp.service;
 
-import com.example.employmentapp.model.AppUser;
-import com.example.employmentapp.repository.AppUserRepository;
+import com.example.employmentapp.model.Users;
+import com.example.employmentapp.repository.UsersRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,26 +13,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AppUserService implements UserDetailsService {
-    private final AppUserRepository repository;
+public class UsersService implements UserDetailsService {
+    private final UsersRepository repository;
 
-    public AppUserService(AppUserRepository repository) {
+    public UsersService(UsersRepository repository) {
         this.repository = repository;
     }
 
-    public Optional<AppUser> findByUsername(String username) {
+    public Optional<Users> findByUsername(String username) {
         return repository.findByUsername(username);
     }
 
-    public List<AppUser> findAll() {
+    public List<Users> findAll() {
         return repository.findAll();
     }
 
-    public Optional<AppUser> findById(Long id) {
+    public Optional<Users> findById(Long id) {
         return repository.findById(id);
     }
 
-    public AppUser save(AppUser user) {
+    public Users save(Users user) {
         // Password is handled by the calling code
         return repository.save(user);
     }
@@ -43,7 +43,7 @@ public class AppUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user = repository.findByUsername(username)
+        Users user = repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         
         return new org.springframework.security.core.userdetails.User(
